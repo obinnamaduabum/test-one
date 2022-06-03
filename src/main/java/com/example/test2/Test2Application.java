@@ -48,7 +48,7 @@ public class Test2Application {
     public void initRun() {
         try {
 
-            String fileName = "logs/user_access.txt";
+            String fileName = "user_access.txt";
             String startDateAsString = "2022-01-01 13:00:00";
             DateIncrementEnum dateIncrementEnum = DateIncrementEnum.HOURLY;
             long range = 200L;
