@@ -21,7 +21,6 @@ public class BlockedIPServiceImpl implements BlockedIPService {
         this.blockedIPTableDao.save(blockedIPTable);
     }
 
-
     @Transactional
     public void bulkSave(List<BlockedIPTable> blockedIPTableList) {
         for(BlockedIPTable blockedIPTable: blockedIPTableList) {

@@ -51,26 +51,11 @@ public class Test2Application {
             String fileName = "logs/user_access.txt";
             String startDateAsString = "2022-01-01 13:00:00";
             DateIncrementEnum dateIncrementEnum = DateIncrementEnum.HOURLY;
+            long range = 200L;
 
             if(this.userAccessLogService.getTotalCount() <= 0L) {
-
-                List<UserAccessLog> userAccessLogList = new ArrayList<>();
-
-                File myObj = new File("src/main/resources/logs/"+ fileName);
-                Scanner myReader = new Scanner(myObj);
-                while (myReader.hasNextLine()) {
-                    String data = myReader.nextLine();
-                    String[] splitValues = data.split("\\|");
-                    UserAccessLog userAccessLog = new UserAccessLog();
-                    userAccessLog.setDate(MyUtils.dateOfTypeStringToDate(splitValues[0], "yyyy-MM-dd HH:mm:ss"));
-                    userAccessLog.setIp(splitValues[1]);
-                    userAccessLog.setUserAgent(splitValues[4]);
-                    userAccessLog.setStatus(splitValues[3]);
-                    userAccessLogList.add(userAccessLog);
-                }
-                myReader.close();
+                List<UserAccessLog> userAccessLogList = this.userAccessLogService.setUpData(fileName);
                 this.userAccessLogService.bulk(userAccessLogList);
-
             } else {
                 this.logger.info("Already loaded!");
             }
@@ -86,7 +71,7 @@ public class Test2Application {
 
             Date endDate = MyUtils.convertLocalDateTimeToDate(localDateTime);
 
-            List<UserAccessProjection> logList = this.userAccessLogService.findAllHavingMoreThanHundredWithDateRange(startDate, endDate);
+            List<UserAccessProjection> logList = this.userAccessLogService.findAllHavingMoreThanHundredWithDateRange(startDate, endDate, range);
 
             List<BlockedIPTable> blockedIPTableList = new ArrayList<>();
 
