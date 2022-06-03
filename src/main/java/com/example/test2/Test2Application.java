@@ -8,22 +8,34 @@ import com.example.test2.service.user_access_log.UserAccessLogService;
 import com.example.test2.utils.DateIncrementEnum;
 import com.example.test2.utils.MyUtils;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Logger;
 
 @SpringBootApplication
 public class Test2Application {
+
+
+    @Value("${params.accessFile}")
+    private String fileName;
+
+    @Value("${params.limit}")
+    private String limit;
+
+    @Value("${params.start}")
+    private String start;
+
+    @Value("${params.duration}")
+    private String duration;
 
     private final Logger logger = Logger.getLogger(Test2Application.class.getName());
 
@@ -48,10 +60,13 @@ public class Test2Application {
     public void initRun() {
         try {
 
-            String fileName = "user_access.txt";
-            String startDateAsString = "2022-01-01 13:00:00";
-            DateIncrementEnum dateIncrementEnum = DateIncrementEnum.HOURLY;
-            long range = 200L;
+            logger.info(fileName);
+            logger.info(start);
+            logger.info(duration);
+            logger.info(limit);
+
+            DateIncrementEnum dateIncrementEnum = DateIncrementEnum.valueOf(this.duration.toUpperCase());
+            long range = Long.parseLong(limit);
 
             if(this.userAccessLogService.getTotalCount() <= 0L) {
                 List<UserAccessLog> userAccessLogList = this.userAccessLogService.setUpData(fileName);
@@ -63,7 +78,7 @@ public class Test2Application {
 
 //            String endDateAsString = "2022-01-01 14:00:00";
 
-            Date startDate = MyUtils.dateOfTypeStringToDate(startDateAsString, "yyyy-MM-dd HH:mm:ss");
+            Date startDate = MyUtils.dateOfTypeStringToDate(start.replace(".", " "), "yyyy-MM-dd HH:mm:ss");
 
             LocalDateTime localDateTime = MyUtils.convertDateToLocalDateTime(startDate);
 
